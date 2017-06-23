@@ -16,6 +16,8 @@ import gupta.ankit.demoproject.R;
 public class PopularDealsFragment extends Fragment {
 
 
+    View view;
+    public static final String Fragment_TAG = PopularDealsFragment.class.getSimpleName();
     public static PopularDealsFragment newInstance(){
         PopularDealsFragment popularDealsFragment = new PopularDealsFragment();
         return popularDealsFragment;
@@ -25,9 +27,8 @@ public class PopularDealsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
+        view=inflater.inflate(R.layout.popular_deals_fragment, container, false);
+        return view;
     }
 
 }
