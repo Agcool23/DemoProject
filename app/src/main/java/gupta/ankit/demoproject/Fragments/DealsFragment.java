@@ -92,17 +92,14 @@ public class DealsFragment extends Fragment {
 
         switch (position) {
             case 0:
-                //tabLayout.getTabAt(3).getIcon().setAlpha(128);
                 Log.e("Fragment Position",position+"");
                 break;
 
             case 1:
-                //tabLayout.getTabAt(3).getIcon().setAlpha(128);
                 Log.e("Fragment Position",position+"");
                 break;
 
             case 2:
-                //tabLayout.getTabAt(3).getIcon().setAlpha(128);
                 Log.e("Fragment Position",position+"");
                 break;
         }

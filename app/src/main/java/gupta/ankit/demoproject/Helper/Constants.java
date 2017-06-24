@@ -28,12 +28,4 @@ public class Constants {
                 IMAGE_URL + " TEXT not null," +
                 PHOTO + " blob not null)";
     }
-
-    public static final class REFERENCE {
-        public static final String DEAL = Config.PACKAGE_NAME + "deal";
-    }
-
-    public static final class Config {
-        public static final String PACKAGE_NAME = "gupta.ankit.demoproject";
-    }
 }

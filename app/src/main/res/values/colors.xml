@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#104780</color>
     <color name="colorAccent">#ff5659</color>
     <color name="colorTextDisable">#818080</color>
+    <color name="placeholder_grey">#AAADC4</color>
+    <color name="placeholder_grey_20">#33AAADC4</color>
 </resources>

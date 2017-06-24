@@ -31,10 +31,12 @@ import gupta.ankit.demoproject.Fragments.DealsFragment;
 import gupta.ankit.demoproject.Fragments.HomeFragment;
 import gupta.ankit.demoproject.Fragments.NotificationsFragment;
 import gupta.ankit.demoproject.Fragments.SettingsFragment;
+import gupta.ankit.demoproject.Fragments.TopDealsFragment;
+import gupta.ankit.demoproject.Helper.PaginationAdapterCallback;
 import gupta.ankit.demoproject.R;
 import gupta.ankit.demoproject.other.CircleTransform;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PaginationAdapterCallback{
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
@@ -89,11 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-/*
-        Bundle inBundle = getIntent().getExtras();
-        name = inBundle.get("name").toString();
-        surname = inBundle.get("surname").toString();
-        imageUrl = inBundle.get("imageUrl").toString();*/
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
         // set toolbar title
         setToolbarTitle();
 
-        // if user select the current navigation menu again, don't do anything
-        // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
 
@@ -166,10 +161,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Sometimes, when fragment has huge data, screen seems hanging
-        // when switching between navigation menus
-        // So using runnable, the fragment is loaded with cross fade effect
-        // This effect can be seen in GMail app
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
@@ -183,18 +174,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // If mPendingRunnable is not null, then add to the message queue
         if (mPendingRunnable != null) {
             mHandler.post(mPendingRunnable);
         }
 
-        // show or hide the fab button
         toggleFab();
 
-        //Closing drawer on item click
         drawer.closeDrawers();
 
-        // refresh toolbar menu
         invalidateOptionsMenu();
     }
 
@@ -325,28 +312,6 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
-    /*@Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawers();
-            return;
-        }
-
-        // This code loads home fragment when back key is pressed
-        // when user is in other fragment than home
-        if (shouldLoadHomeFragOnBackPress) {
-            // checking if user is on other navigation menu
-            // rather than home
-            if (navItemIndex != 0) {
-                navItemIndex = 0;
-                CURRENT_TAG = TAG_DEALS;
-                loadHomeFragment();
-                return;
-            }
-        }
-
-        super.onBackPressed();
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -361,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
                 navItemIndex = 0;
                 CURRENT_TAG = TAG_DEALS;
                 loadHomeFragment();
-                return;
             }else{
                 moveTaskToBack(true);
             }
@@ -385,6 +349,13 @@ public class MainActivity extends AppCompatActivity {
             fab.show();
         else
             fab.hide();
+    }
+
+    @Override
+    public void retryPageLoad() {
+
+        TopDealsFragment topDealsFragment = TopDealsFragment.newInstance();
+        topDealsFragment.retryPageLoad();
     }
 }
 

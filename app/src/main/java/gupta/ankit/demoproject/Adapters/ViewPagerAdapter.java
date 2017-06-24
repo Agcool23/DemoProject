@@ -32,18 +32,15 @@ public class ViewPagerAdapter  extends FragmentPagerAdapter{
 
         if (position == 0) {
             fragment = TopDealsFragment.newInstance();
-            //mViewPager.setTag(R.integer.page1,fragment);
 
 
         }
         else if (position == 1) {
 
             fragment = PopularDealsFragment.newInstance();
-            //mViewPager.setTag(R.integer.page2,fragment);
 
         }
         return fragment;
-//        return mFragmentList.get(position);
     }
     public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);

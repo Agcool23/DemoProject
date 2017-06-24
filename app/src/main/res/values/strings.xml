@@ -34,7 +34,12 @@
     <string name="fb_login_protocol_scheme">fb437456869970179</string>
     <string name="error_msg">Sorry! Couldn\'t fetch deals.</string>
     <string name="btn_retry">Retry</string>
+    <string name="tap_to_reload">Tap to reload</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_msg_no_internet">Not connected to internet</string>
+    <string name="error_msg_timeout">The server took too long to respond</string>
+    <string name="error_msg_unknown">An unexpected error occurred</string>
+    <string name="no_description">No Description Found</string>
 </resources>
