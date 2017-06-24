@@ -23,11 +23,17 @@
     </string-array>
 
     <string name="activity_title_about_us">About Us</string>
+    <string name="log_out">Logout</string>
     <string name="activity_title_privacy_policy">Privacy Policy</string>
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Logout</string>
     <string name="action_mark_all_read">Mark All as Read</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="facebook_app_id">437456869970179</string>
+    <string name="fb_login_protocol_scheme">fb437456869970179</string>
+    <string name="error_msg">Sorry! Couldn\'t fetch deals.</string>
+    <string name="btn_retry">Retry</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,6 +1,8 @@
 package gupta.ankit.demoproject.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,9 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.facebook.FacebookSdk;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.login.LoginManager;
 
 import gupta.ankit.demoproject.Fragments.CouponsFragment;
 import gupta.ankit.demoproject.Fragments.DealsFragment;
@@ -39,13 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtName, txtWebsite;
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    SharedPreferences sharedpreferences;
 
-    // urls to load navigation header background image
-    // and profile image
-    private static final String urlNavHeaderBg = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String urlProfileImg = "https://scontent-sin6-1.xx.fbcdn.net/v/t1.0-0/p480x480/15780908_10211640543677148_6887697577739927441_n.jpg?oh=deec93ffae62fdcb9796ecd585fe164c&oe=59A56DBB";
-
-    // index to identify current nav menu item
+    private static final String urlNavHeaderBg = "https://pbs.twimg.com/profile_banners/113776804/1387673856/1500x500";
     public static int navItemIndex = 0;
 
     // tags used to attach the fragments
@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_DEALS = "deals";
     private static final String TAG_NOTIFICATIONS = "notifications";
     private static final String TAG_SETTINGS = "settings";
-    public static String CURRENT_TAG = TAG_HOME;
+    public static String CURRENT_TAG = TAG_DEALS;
+    String name,imageUrl;
+    public static final String MyPREFERENCES = "MyPrefs" ;
 
     // toolbar titles respected to selected nav menu item
     private String[] activityTitles;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+/*
+        Bundle inBundle = getIntent().getExtras();
+        name = inBundle.get("name").toString();
+        surname = inBundle.get("surname").toString();
+        imageUrl = inBundle.get("imageUrl").toString();*/
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             navItemIndex = 0;
-            CURRENT_TAG = TAG_HOME;
+            CURRENT_TAG = TAG_DEALS;
             loadHomeFragment();
         }
     }
@@ -115,8 +123,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadNavHeader() {
         // name, website
-        txtName.setText("Ankit Gupta");
-        txtWebsite.setText("Agcool23@yahoo.com");
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        name=sharedpreferences.getString("Name","NoName Saved");
+        imageUrl = sharedpreferences.getString("imageUrl","NoUrl Saved");
+        txtName.setText(name);
+        txtWebsite.setText("www.facebook.com");
 
         // loading header background image
         Glide.with(this).load(urlNavHeaderBg)
@@ -125,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 .into(imgNavHeaderBg);
 
         // Loading profile image
-        Glide.with(this).load(urlProfileImg)
+        Glide.with(this).load(imageUrl)
                 .crossFade()
                 .thumbnail(0.5f)
                 .bitmapTransform(new CircleTransform(this))
@@ -227,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
-            // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -263,6 +273,16 @@ public class MainActivity extends AppCompatActivity {
                         // launch new intent instead of loading fragment
                         startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
                         drawer.closeDrawers();
+                        return true;
+                    case R.id.log_out:
+                        //logout user
+                        SharedPreferences.Editor editor = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE).edit();
+                        editor.clear();
+                        LoginManager.getInstance().logOut();
+                        Intent login = new Intent(MainActivity.this, SocialLoginActivity.class);
+                        startActivity(login);
+                        finish();
+                        editor.apply();
                         return true;
                     default:
                         navItemIndex = 0;
@@ -305,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawers();
@@ -319,56 +339,43 @@ public class MainActivity extends AppCompatActivity {
             // rather than home
             if (navItemIndex != 0) {
                 navItemIndex = 0;
-                CURRENT_TAG = TAG_HOME;
+                CURRENT_TAG = TAG_DEALS;
                 loadHomeFragment();
                 return;
             }
         }
 
         super.onBackPressed();
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawers();
+            return;
+        }
+        if (shouldLoadHomeFragOnBackPress) {
+            // checking if user is on other navigation menu
+            // rather than home
+            if (navItemIndex != 0) {
+                navItemIndex = 0;
+                CURRENT_TAG = TAG_DEALS;
+                loadHomeFragment();
+                return;
+            }else{
+                moveTaskToBack(true);
+            }
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
-        // show menu only when home fragment is selected
-        /*if (navItemIndex == 0) {
-            getMenuInflater().inflate(R.menu.main, menu);
-        }
-
-        // when fragment is notifications, load the menu created for notifications
-        if (navItemIndex == 3) {
-            getMenuInflater().inflate(R.menu.notifications, menu);
-        }*/
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            Toast.makeText(getApplicationContext(), "Logout user!", Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-        // user is in notifications fragment
-        // and selected 'Mark all as Read'
-        if (id == R.id.action_mark_all_read) {
-            Toast.makeText(getApplicationContext(), "All notifications marked as read!", Toast.LENGTH_LONG).show();
-        }
-
-        // user is in notifications fragment
-        // and selected 'Clear All'
-        if (id == R.id.action_clear_notifications) {
-            Toast.makeText(getApplicationContext(), "Clear all notifications!", Toast.LENGTH_LONG).show();
-        }
-*/
         return super.onOptionsItemSelected(item);
     }
 
